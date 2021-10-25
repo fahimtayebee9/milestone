@@ -84,7 +84,7 @@ const App = (() =>{
         data.forEach( item => {
             markUp += `<div class="modal-container" style="display: none;" id="uid_${item.name.first}">
                             <div class="modal" role="dialog">
-                                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+                                <button type="button" id="btn_uid_${item.name.first}" class="modal-close-btn"><strong>X</strong></button>
                                 <div class="modal-info-container">
                                     <img class="modal-img" src="${item.picture.medium}" alt="profile picture">
                                     <h3 id="name" class="modal-name cap">${item.name.title + ' ' + item.name.first + ' ' + item.name.last}</h3>
@@ -99,7 +99,12 @@ const App = (() =>{
                         </div>`;
             setValue(Element.galleryModals, markUp);
             count++;
-            
+        });
+
+        document.querySelectorAll('.modal-close-btn').forEach( btn => {
+            btn.addEventListener('click' , e => {
+                e.target.closest('.modal-container').style.display = "none";
+            })
         });
     }
 
@@ -109,12 +114,7 @@ const App = (() =>{
 
     // EVENT LISTENERS
     const eventListeners = () => {
-        document.querySelectorAll('.modal-close-btn').forEach( btn => {
-            btn.addEventListener('click' , e => {
-                e.target.closest('.modal-container').style.display = "none";
-                console.log(e.target.closest('.modal-container'));
-            })
-        });
+        
     }
 
     // RENDER ALL
