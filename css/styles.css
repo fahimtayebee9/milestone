@@ -19,6 +19,10 @@ body {
     background: rgba(235, 235, 235, 0.9);
 }
 
+.card{
+    /* flex-direction: row!important; */
+}
+
 header {
     padding: 15px 5px 5px;
 }
@@ -100,6 +104,7 @@ header h1 {
 
 .card-info-container {
     text-align: left;
+    margin-left: 25px;
 }
 
 .card-name {
