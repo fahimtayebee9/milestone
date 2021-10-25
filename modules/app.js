@@ -19,22 +19,48 @@ const App = (() =>{
         if(data != null){
             renderData(data.results);
             renderUserModal(data.results);
-            return data;
         }
     }
 
+    const renderSearchResult = (data) => {
+        Element.galleryDiv.innerHTML = "";
+        data.forEach( item => {
+            Element.galleryDiv.appendChild(item);
+        });
+    }
+
     // SEARCH ACTION
-    // const seachAction = async () => {
-    //     var searchInput = Element.searchField.value;
-    //     renderPreloader();
-    //     const data = await fetchMovies(urlManager.createSearchUrl( [ 'page', 'sort_by', 'query' ] , [ 1, 'popularity.desc' , searchInput ]) );
-    //     if(data.total_results >= 1){
-    //         renderMovies(data.results);
-    //     }
-    // }
+    const seachAction = () => {
+        const data = document.querySelectorAll('.data-list');
+        
+        let result = Array.from(data).filter( (element) => {
+            return filterData(element);
+        });
+        
+        renderSearchResult(result);
+    }
+
+    const filterData = (element) => {
+        var searchInput = Element.searchInput.value;
+        let data = null ;
+        Array.from(element.children[1].children).forEach( item => {
+            if(item.className.includes('card-name')){
+                if(item.innerHTML.toString().toLowerCase().includes(searchInput.toLowerCase())){
+                    data = element;
+                }
+            }
+        });
+
+        if(data != null){
+            return data;
+        }
+        else if(Element.searchInput.value == "" || Element.searchInput.value == null){
+            fetchFromApi();
+        }
+    }
 
     // RENDER SINGLE USER
-    const renderData = async (data) => {
+    const renderData = (data) => {
         let markUp = '';
         let count = 0;
 
@@ -69,7 +95,6 @@ const App = (() =>{
             return element.id == modalClass; 
         })[0];
         modalDiv.style.display = "block";
-        console.log(modalDiv)
     }
 
     const getDate = (dob_date) => {
@@ -114,7 +139,7 @@ const App = (() =>{
 
     // EVENT LISTENERS
     const eventListeners = () => {
-        
+        Element.searchSubmit.addEventListener('click' , seachAction);
     }
 
     // RENDER ALL
