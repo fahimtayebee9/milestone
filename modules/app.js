@@ -63,15 +63,12 @@ const App = (() =>{
         });
     };
 
-    const closeModal = (event) => {
-        Element.modal.classList.remove('open-modal');
-    }
-
     const openEditModal = (event) => {
         let modalClass = event.target.closest('.card').classList[2];
         let modalDiv = Array.from(document.querySelectorAll('.modal-container')).filter(function(element) {
             return element.id == modalClass; 
         })[0];
+        modalDiv.style.display = "block";
         console.log(modalDiv)
     }
 
@@ -85,7 +82,7 @@ const App = (() =>{
         let markUp = ``;
         let count  = 0;
         data.forEach( item => {
-            markUp += `<div class="modal-container" id="uid_${item.name.first}">
+            markUp += `<div class="modal-container" style="display: none;" id="uid_${item.name.first}">
                             <div class="modal" role="dialog">
                                 <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                                 <div class="modal-info-container">
@@ -102,12 +99,7 @@ const App = (() =>{
                         </div>`;
             setValue(Element.galleryModals, markUp);
             count++;
-            document.querySelectorAll('.modal-close-btn').forEach( btn => {
-                btn.addEventListener('click' , event => {
-                    let closeDiv = event.target.closest('modal');
-                    console.log(closeDiv);
-                })
-            });
+            
         });
     }
 
@@ -117,15 +109,12 @@ const App = (() =>{
 
     // EVENT LISTENERS
     const eventListeners = () => {
-        // Element.btnSearch.addEventListener('click',seachAction);
-        
-        // Element.menuList.forEach( function(item){
-        //     item.addEventListener('click',renderMenuResult);
-        // });
-        
-        // Element.movieBox.forEach( function(item){
-        //     item.addEventListener('click', renderDetails);
-        // });
+        document.querySelectorAll('.modal-close-btn').forEach( btn => {
+            btn.addEventListener('click' , e => {
+                e.target.closest('.modal-container').style.display = "none";
+                console.log(e.target.closest('.modal-container'));
+            })
+        });
     }
 
     // RENDER ALL
