@@ -79,14 +79,7 @@ const App = (() =>{
             count++;
         });
 
-        document.querySelectorAll('.data-list').forEach( modal => {
-            modal.addEventListener('click' , e => {
-                e.target.closest('.card').addEventListener('click', event => {
-                    event.preventDefault();
-                    openEditModal(event);
-                });
-            })
-        });
+        eventListeners();
     };
 
     const openEditModal = (event) => {
@@ -107,7 +100,7 @@ const App = (() =>{
         let markUp = ``;
         let count  = 0;
         data.forEach( item => {
-            markUp += `<div class="modal-container" style="display: none;" id="uid_${item.name.first}">
+            markUp += `<div class="modal-container did_${count}" style="display: none;" id="uid_${item.name.first}" data-id="did_${count}">
                             <div class="modal" role="dialog">
                                 <button type="button" id="btn_uid_${item.name.first}" class="modal-close-btn"><strong>X</strong></button>
                                 <div class="modal-info-container">
@@ -121,25 +114,75 @@ const App = (() =>{
                                     <p class="modal-text">Birthday: ${getDate(item.dob.date)}</p>
                                 </div>
                             </div>
+                            <div class="modal-btn-container">
+                                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                                <button type="button" id="modal-next" class="modal-next btn">Next</button>
+                            </div>
                         </div>`;
             setValue(Element.galleryModals, markUp);
             count++;
         });
 
-        document.querySelectorAll('.modal-close-btn').forEach( btn => {
-            btn.addEventListener('click' , e => {
-                e.target.closest('.modal-container').style.display = "none";
-            })
-        });
+        modalEvents();
+
     }
 
     const setValue = (elementObj, value) => {
         elementObj.innerHTML = value;
     }
 
+    //MODAL EVENTS
+    const modalEvents = () => {
+        document.querySelectorAll('.modal-close-btn').forEach( btn => {
+            btn.addEventListener('click' , e => {
+                e.target.closest('.modal-container').style.display = "none";
+            });
+        });
+
+        document.querySelectorAll('.modal-prev').forEach( btn => {
+            btn.addEventListener('click' , e => {
+                e.preventDefault();
+                let current_emp_sl = e.target.closest('.modal-container').getAttribute('data-id').toString().split('_')[1];
+                if(current_emp_sl > 0 && current_emp_sl < 12){
+                    document.querySelector('.did_'+ current_emp_sl).style.display = "none";
+                    let modalDiv = document.querySelector('.did_'+ (--current_emp_sl));
+                    modalDiv.style.display = "block";
+                    
+                }
+            });
+        });
+
+        document.querySelectorAll('.modal-next').forEach( btn => {
+            btn.addEventListener('click' , e => {
+                e.preventDefault();
+                let current_emp_sl = e.target.closest('.modal-container').getAttribute('data-id').toString().split('_')[1];
+                if(current_emp_sl >= 0 && current_emp_sl < 11){
+                    document.querySelector('.did_'+ current_emp_sl).style.display = "none";
+                    let modalDiv = document.querySelector('.did_'+ (++current_emp_sl));
+                    modalDiv.style.display = "block";
+                }
+            });
+        });
+    } 
+
     // EVENT LISTENERS
     const eventListeners = () => {
         Element.searchSubmit.addEventListener('click' , seachAction);
+
+        document.querySelectorAll('.data-list').forEach( modal => {
+            modal.addEventListener('click' , e => {
+                e.target.closest('.card').addEventListener('click', event => {
+                    event.preventDefault();
+                    openEditModal(event);
+                });
+            })
+        });
+        
+        document.querySelector('#search-input').addEventListener('input', ()=>{ 
+            if(document.querySelector('#search-input').value == ""){
+                fetchFromApi();
+            }
+        });
     }
 
     // RENDER ALL
@@ -147,7 +190,6 @@ const App = (() =>{
         // Fetch Movies
         fetchFromApi();
         
-        eventListeners();
     };
 
     return {
